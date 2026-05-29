@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { useState, type FormEvent } from "react";
 
 type RegisterResponse =
@@ -38,7 +39,18 @@ export default function RegisterPage() {
         return;
       }
 
-      router.push("/login");
+      const signInRes = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (!signInRes || signInRes.error) {
+        router.push("/login");
+        return;
+      }
+
+      router.push("/onboarding");
     } catch {
       setError("Registration failed.");
     } finally {
