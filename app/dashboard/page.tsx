@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 
 import PersonalizedFeed from "@/app/dashboard/PersonalizedFeed";
+import NewsChat from "@/app/dashboard/NewsChat";
 import SignOutButton from "@/app/dashboard/SignOutButton";
 import TrendingTopics from "@/app/dashboard/TrendingTopics";
 import { authOptions } from "@/lib/auth";
@@ -66,6 +67,16 @@ export default async function DashboardPage() {
           <h2 className="text-lg font-semibold tracking-tight">Your Feed</h2>
           <div className="mt-4">
             <PersonalizedFeed />
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+          <h2 className="text-lg font-semibold tracking-tight">Ask AI About the News</h2>
+          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+            Chat with your personal news assistant
+          </p>
+          <div className="mt-4">
+            <NewsChat />
           </div>
         </section>
       </div>

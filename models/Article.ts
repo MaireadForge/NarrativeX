@@ -39,6 +39,8 @@ const ArticleSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+ArticleSchema.index({ title: "text", description: "text", aiSummary: "text" });
+
 export type ArticleDocument = InferSchemaType<typeof ArticleSchema>;
 
 const Article: Model<ArticleDocument> =
