@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NarrativeX — AI News Intelligence Platform
+
+NarrativeX is a full-stack news platform that fetches real-time headlines,
+generates AI summaries, and lets you chat with your news using natural language.
+
+## Live Demo
+[narrativex.vercel.app](https://narrativex.vercel.app)
+
+---
+
+## Features
+
+- **Personalized Feed** — Select your interests, get a feed tailored to you. Read articles are automatically excluded.
+- **AI Summaries** — Every article is summarized into 2 clear sentences using Groq's Llama 3.3 70B model.
+- **AI News Chat** — Ask questions like "What's happening with AI?" and get answers grounded in real current articles (RAG).
+- **Trending Topics** — Groq analyzes recent headlines and extracts the top trending entities in real time.
+- **Semantic Deduplication** — Similar articles from multiple sources are detected and merged automatically.
+- **Full Text Search** — Search across titles, descriptions, and AI summaries with category filters.
+- **Bookmarks** — Save articles to read later.
+- **Reading Stats** — Track articles read, topics followed, and bookmarks saved.
+
+---
+
+## Tech Stack
+
+| | |
+|---|---|
+| Framework | Next.js 16 (App Router) + TypeScript |
+| Styling | Tailwind CSS |
+| Database | MongoDB Atlas + Mongoose |
+| AI | Groq API (llama-3.3-70b-versatile) |
+| Auth | NextAuth.js |
+| News Source | NewsAPI.org |
+| Deployment | Vercel |
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+git clone https://github.com/yourusername/narrativex.git
+cd narrativex
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
+MONGODB_URI=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=http://localhost:3000
+GROQ_API_KEY=
+NEWS_API_KEY=
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Generate `NEXTAUTH_SECRET`:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## How the AI Chat Works
 
-To learn more about Next.js, take a look at the following resources:
+1. User asks a question
+2. App searches MongoDB for the 5 most relevant articles
+3. Those articles are injected into the AI prompt as context
+4. Groq answers strictly based on real articles — no hallucination
+5. Sources are shown below every response
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Author
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[Your Name](https://github.com/yourusername)
