@@ -14,6 +14,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
 
     const category = searchParams.get("category") ?? undefined;
+    const country = searchParams.get("country") ?? "us";
     const pageRaw = searchParams.get("page");
     const refresh = parseBoolean(searchParams.get("refresh"));
 
@@ -22,14 +23,14 @@ export async function GET(req: Request) {
     await connectDB();
 
     if (refresh) {
-      await fetchAndStoreArticles(category ?? "general");
+      await fetchAndStoreArticles(category ?? "general", country);
     } else {
       const filter: Record<string, unknown> = {};
       if (category) filter.category = category;
 
       const existingCount = await Article.countDocuments(filter);
       if (existingCount === 0) {
-        await fetchAndStoreArticles(category ?? "general");
+        await fetchAndStoreArticles(category ?? "general", country);
       }
     }
 

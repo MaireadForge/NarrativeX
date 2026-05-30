@@ -31,6 +31,7 @@ const ArticleSchema = new mongoose.Schema(
       enum: CATEGORIES,
       default: "general",
     },
+    country: { type: String, default: "us" },
     publishedAt: { type: Date, required: true },
     aiSummary: { type: String, default: "" },
     summaryGeneratedAt: { type: Date },

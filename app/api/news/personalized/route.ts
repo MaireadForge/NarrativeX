@@ -17,6 +17,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const pageRaw = searchParams.get("page");
     const limitRaw = searchParams.get("limit");
+    const country = searchParams.get("country") ?? "us";
 
     const page = pageRaw ? Math.max(1, Math.floor(Number(pageRaw))) : 1;
     const limit = limitRaw ? Math.max(1, Math.floor(Number(limitRaw))) : 10;
@@ -36,6 +37,12 @@ export async function GET(req: Request) {
     const readIds = (user.readHistory ?? []).map((entry) => entry.articleId);
 
     const filter: Record<string, unknown> = {};
+
+    if (country === "us") {
+      filter.$or = [{ country: "us" }, { country: { $exists: false } }];
+    } else {
+      filter.country = country;
+    }
 
     if (interests.length > 0) {
       filter.category = { $in: interests };

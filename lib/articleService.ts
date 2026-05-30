@@ -1,7 +1,7 @@
 import connectDB from "@/lib/db";
 import { deduplicateArticles } from "@/lib/deduplication";
 import { generateArticleSummary } from "@/lib/groq";
-import { fetchNewsByCategory, type NewsAPIArticle } from "@/lib/newsapi";
+import { fetchNewsByCategory } from "@/lib/newsapi";
 import Article from "@/models/Article";
 
 export const CATEGORIES = [
@@ -22,12 +22,15 @@ function isCategory(category: string): category is Category {
   return (CATEGORIES as readonly string[]).includes(category);
 }
 
-export async function fetchAndStoreArticles(category: string): Promise<number> {
+export async function fetchAndStoreArticles(
+  category: string,
+  country: string = "us"
+): Promise<number> {
   const effectiveCategory: Category = isCategory(category) ? category : "general";
 
   await connectDB();
 
-  const fetched = await fetchNewsByCategory(effectiveCategory);
+  const fetched = await fetchNewsByCategory(effectiveCategory, country);
   const deduped = deduplicateArticles(fetched);
 
   let createdCount = 0;
@@ -52,6 +55,7 @@ export async function fetchAndStoreArticles(category: string): Promise<number> {
       urlToImage: a.urlToImage ?? "",
       source: { id: a.source?.id ?? "", name: a.source?.name ?? "" },
       category: effectiveCategory,
+      country,
       publishedAt: new Date(a.publishedAt),
       aiSummary,
       summaryGeneratedAt: aiSummary ? new Date() : undefined,

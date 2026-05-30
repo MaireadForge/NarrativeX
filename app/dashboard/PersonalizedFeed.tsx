@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+
+
 type FeedArticle = {
   _id: string;
   title: string;
@@ -68,9 +70,16 @@ export default function PersonalizedFeed() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
 
-  const fetchPage = useCallback(async (pageNum: number, append: boolean) => {
-    const res = await fetch(`/api/news/personalized?page=${pageNum}&limit=10`);
+  const fetchPage = useCallback(
+    async (pageNum: number, append: boolean) => {
+      const params = new URLSearchParams({
+        page: String(pageNum),
+        limit: "10",
+      });
+
+      const res = await fetch(`/api/news/personalized?${params.toString()}`);
     const data = (await res.json().catch(() => null)) as
       | PersonalizedResponse
       | { error?: string }
@@ -89,7 +98,11 @@ export default function PersonalizedFeed() {
     setArticles((prev) => (append ? [...prev, ...data.articles] : data.articles));
     setPage(data.page);
     setTotalPages(data.totalPages);
-  }, []);
+  },
+    []
+  );
+
+ 
 
   useEffect(() => {
     let cancelled = false;
@@ -97,6 +110,8 @@ export default function PersonalizedFeed() {
     async function load() {
       setLoading(true);
       setError(null);
+      setArticles([]);
+      setPage(1);
       try {
         await fetchPage(1, false);
       } catch (e) {
